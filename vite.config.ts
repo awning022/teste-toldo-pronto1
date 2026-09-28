@@ -11,7 +11,10 @@ const analyze = process.env.ANALYZE === 'true';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/main.ts'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/main.ts',
+            ],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
@@ -19,6 +22,7 @@ export default defineConfig({
                 }),
             ],
         }),
+
         vue({
             template: {
                 transformAssetUrls: {
@@ -27,30 +31,39 @@ export default defineConfig({
                 },
             },
         }),
+
         tailwindcss(),
     ],
+
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),
         },
     },
+
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
     },
+
     build: {
         target: 'es2020',
         cssCodeSplit: true,
         sourcemap: false,
         chunkSizeWarningLimit: 1000,
+
         rollupOptions: {
-            output: {
-                manualChunks: {
-                    'vendor-vue': ['vue', 'vue-router', 'pinia'],
-                },
-            },
-            ...(analyze ? { plugins: [visualizer({ open: true, filename: 'bundle-stats.html' })] } : {}),
+            ...(analyze
+                ? {
+                    plugins: [
+                        visualizer({
+                            open: true,
+                            filename: 'bundle-stats.html',
+                        }),
+                    ],
+                }
+                : {}),
         },
     },
 });
